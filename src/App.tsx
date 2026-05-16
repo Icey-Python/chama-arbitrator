@@ -14,6 +14,8 @@ import {
 } from '@tabler/icons-react';
 import ReactMarkdown from 'react-markdown';
 
+import { z } from 'zod';
+
 interface Message {
   role: 'user' | 'model';
   text: string;
@@ -35,6 +37,12 @@ function Logo() {
   );
 }
 
+const uploadsSchema = z.object({
+  bylaws: z.instanceof(File, { message: "Constitution & Rules are required" }),
+  records: z.instanceof(File, { message: "M-Pesa Statements are required" }),
+  csvFile: z.instanceof(File, { message: "Contribution Sheets are required" }),
+});
+
 export default function App() {
   const [step, setStep] = useState<'setup' | 'chat'>('setup');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -43,6 +51,7 @@ export default function App() {
   const [bylaws, setBylaws] = useState<File | null>(null);
   const [records, setRecords] = useState<File | null>(null);
   const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [uploadErrors, setUploadErrors] = useState<Record<string, string>>({});
   
   // Drawer states for mobile
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -112,6 +121,24 @@ export default function App() {
     }
   };
 
+  const handleStart = () => {
+    const result = uploadsSchema.safeParse({ bylaws, records, csvFile });
+    
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.issues.forEach(issue => {
+        if (issue.path[0]) {
+          errors[issue.path[0].toString()] = issue.message;
+        }
+      });
+      setUploadErrors(errors);
+      return;
+    }
+
+    setUploadErrors({});
+    setStep('chat');
+  };
+
   if (step === 'setup') {
     return (
       <div className="min-h-screen bg-white flex flex-col font-sans text-slate-800">
@@ -134,43 +161,55 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-20">
             {/* Upload Bylaws */}
             <div className="flex flex-col items-center">
-              <input type="file" id="bylaws" className="hidden" onChange={(e) => setBylaws(e.target.files?.[0] || null)} />
-              <label htmlFor="bylaws" className={`w-full border-2 border-dashed aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${bylaws ? 'bg-indigo-50 text-indigo-900 border-indigo-200' : 'bg-slate-50 hover:bg-slate-100 text-slate-400 border-slate-200 hover:border-slate-300'}`}>
-                {bylaws ? <IconCheck size={40} className="text-indigo-600 mb-6" stroke={1.5} /> : <IconFileText size={40} className="mb-6" stroke={1.5} />}
+              <input type="file" id="bylaws" className="hidden" onChange={(e) => {
+                setUploadErrors(prev => ({ ...prev, bylaws: '' }));
+                setBylaws(e.target.files?.[0] || null);
+              }} />
+              <label htmlFor="bylaws" className={`w-full border-2 border-dashed aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${bylaws ? 'bg-indigo-50 text-indigo-900 border-indigo-200' : uploadErrors.bylaws ? 'bg-red-50 text-red-500 border-red-200 hover:border-red-300' : 'bg-slate-50 hover:bg-slate-100 text-slate-400 border-slate-200 hover:border-slate-300'}`}>
+                {bylaws ? <IconCheck size={40} className="text-indigo-600 mb-6" stroke={1.5} /> : <IconFileText size={40} className={`mb-6 ${uploadErrors.bylaws && 'text-red-400'}`} stroke={1.5} />}
                 <span className="text-sm font-bold tracking-widest uppercase text-center">
                   Upload Constitution & Rules
                 </span>
                 {bylaws && <span className="text-xs font-medium mt-3 opacity-60 truncate w-full text-center">{bylaws.name}</span>}
+                {uploadErrors.bylaws && <span className="text-xs font-bold mt-3 text-red-500">{uploadErrors.bylaws}</span>}
               </label>
             </div>
 
             {/* Upload M-PESA */}
             <div className="flex flex-col items-center">
-              <input type="file" id="mpesa" className="hidden" onChange={(e) => setRecords(e.target.files?.[0] || null)} />
-              <label htmlFor="mpesa" className={`w-full border-2 border-dashed aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${records ? 'bg-indigo-50 text-indigo-900 border-indigo-200' : 'bg-slate-50 hover:bg-slate-100 text-slate-400 border-slate-200 hover:border-slate-300'}`}>
-                {records ? <IconCheck size={40} className="text-indigo-600 mb-6" stroke={1.5} /> : <IconBrandCashapp size={40} className="mb-6" stroke={1.5} />}
+              <input type="file" id="mpesa" className="hidden" onChange={(e) => {
+                setUploadErrors(prev => ({ ...prev, records: '' }));
+                setRecords(e.target.files?.[0] || null);
+              }} />
+              <label htmlFor="mpesa" className={`w-full border-2 border-dashed aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${records ? 'bg-indigo-50 text-indigo-900 border-indigo-200' : uploadErrors.records ? 'bg-red-50 text-red-500 border-red-200 hover:border-red-300' : 'bg-slate-50 hover:bg-slate-100 text-slate-400 border-slate-200 hover:border-slate-300'}`}>
+                {records ? <IconCheck size={40} className="text-indigo-600 mb-6" stroke={1.5} /> : <IconBrandCashapp size={40} className={`mb-6 ${uploadErrors.records && 'text-red-400'}`} stroke={1.5} />}
                 <span className="text-sm font-bold tracking-widest uppercase text-center">
                  Upload M-Pesa Statements
                 </span>
                 {records && <span className="text-xs font-medium mt-3 opacity-60 truncate w-full text-center">{records.name}</span>}
+                {uploadErrors.records && <span className="text-xs font-bold mt-3 text-red-500">{uploadErrors.records}</span>}
               </label>
             </div>
 
             {/* Upload CSV */}
             <div className="flex flex-col items-center">
-              <input type="file" id="csv" className="hidden" onChange={(e) => setCsvFile(e.target.files?.[0] || null)} />
-              <label htmlFor="csv" className={`w-full border-2 border-dashed aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${csvFile ? 'bg-indigo-50 text-indigo-900 border-indigo-200' : 'bg-slate-50 hover:bg-slate-100 text-slate-400 border-slate-200 hover:border-slate-300'}`}>
-                {csvFile ? <IconCheck size={40} className="text-indigo-600 mb-6" stroke={1.5} /> : <IconTable size={40} className="mb-6" stroke={1.5} />}
+              <input type="file" id="csv" className="hidden" onChange={(e) => {
+                setUploadErrors(prev => ({ ...prev, csvFile: '' }));
+                setCsvFile(e.target.files?.[0] || null);
+              }} />
+              <label htmlFor="csv" className={`w-full border-2 border-dashed aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${csvFile ? 'bg-indigo-50 text-indigo-900 border-indigo-200' : uploadErrors.csvFile ? 'bg-red-50 text-red-500 border-red-200 hover:border-red-300' : 'bg-slate-50 hover:bg-slate-100 text-slate-400 border-slate-200 hover:border-slate-300'}`}>
+                {csvFile ? <IconCheck size={40} className="text-indigo-600 mb-6" stroke={1.5} /> : <IconTable size={40} className={`mb-6 ${uploadErrors.csvFile && 'text-red-400'}`} stroke={1.5} />}
                 <span className="text-sm font-bold tracking-widest uppercase text-center">
                   Upload Contribution Sheets
                 </span>
                 {csvFile && <span className="text-xs font-medium mt-3 opacity-60 truncate w-full text-center">{csvFile.name}</span>}
+                {uploadErrors.csvFile && <span className="text-xs font-bold mt-3 text-red-500">{uploadErrors.csvFile}</span>}
               </label>
             </div>
           </div>
 
           <button 
-            onClick={() => setStep('chat')}
+            onClick={handleStart}
             className="px-12 py-5 bg-slate-900 text-white rounded-full text-sm font-bold tracking-widest uppercase hover:bg-black transition-colors"
           >
             Start Arbitration
