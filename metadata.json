@@ -1,0 +1,8 @@
+{
+  "name": "Chama Arbitrator",
+  "description": "AI-powered dispute resolution agent for Kenyan Chamas. Mediates disputes by citing your specific bylaws and transaction records in English, Kiswahili, and Sheng.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
