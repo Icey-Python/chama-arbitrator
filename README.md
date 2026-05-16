@@ -54,3 +54,11 @@ You can easily run the application on your local machine:
 3. Click **Start Arbitration** once all files are uploaded.
 4. **Chat Interface:** Describe the dispute (e.g., "Kamau claims he paid his March contribution but was charged a late fee. Check the records.").
 5. The Arbitrator Agent will review the records, explain its findings, and propose a structured **Resolution Draft** in the right-hand panel.
+
+## Team Members
+
+- **Sam Kelly** - Fullstack Developer (AI Architecture & Prompt Engineering)
+- **Ryan Malawa** - Fullstack Developer (Backend Integration)
+- **Abel Misiocha** - Fullstack Developer (Backend Integration)
+- **Ian Onyango** - Frontend Developer (Uploads Interface & Validation)
+- **Rosedebrah Ojuok** - Frontend Developer (Chat Interface & Core Demo Assets)
