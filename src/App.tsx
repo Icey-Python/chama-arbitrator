@@ -135,10 +135,10 @@ export default function App() {
             {/* Upload Bylaws */}
             <div className="flex flex-col items-center">
               <input type="file" id="bylaws" className="hidden" onChange={(e) => setBylaws(e.target.files?.[0] || null)} />
-              <label htmlFor="bylaws" className={`w-full aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${bylaws ? 'bg-indigo-50 text-indigo-900' : 'bg-slate-50 hover:bg-slate-100 text-slate-400'}`}>
+              <label htmlFor="bylaws" className={`w-full border-2 border-dashed aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${bylaws ? 'bg-indigo-50 text-indigo-900 border-indigo-200' : 'bg-slate-50 hover:bg-slate-100 text-slate-400 border-slate-200 hover:border-slate-300'}`}>
                 {bylaws ? <IconCheck size={40} className="text-indigo-600 mb-6" stroke={1.5} /> : <IconFileText size={40} className="mb-6" stroke={1.5} />}
                 <span className="text-sm font-bold tracking-widest uppercase text-center">
-                  Constitution & Rules
+                  Upload Constitution & Rules
                 </span>
                 {bylaws && <span className="text-xs font-medium mt-3 opacity-60 truncate w-full text-center">{bylaws.name}</span>}
               </label>
@@ -147,10 +147,10 @@ export default function App() {
             {/* Upload M-PESA */}
             <div className="flex flex-col items-center">
               <input type="file" id="mpesa" className="hidden" onChange={(e) => setRecords(e.target.files?.[0] || null)} />
-              <label htmlFor="mpesa" className={`w-full aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${records ? 'bg-indigo-50 text-indigo-900' : 'bg-slate-50 hover:bg-slate-100 text-slate-400'}`}>
+              <label htmlFor="mpesa" className={`w-full border-2 border-dashed aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${records ? 'bg-indigo-50 text-indigo-900 border-indigo-200' : 'bg-slate-50 hover:bg-slate-100 text-slate-400 border-slate-200 hover:border-slate-300'}`}>
                 {records ? <IconCheck size={40} className="text-indigo-600 mb-6" stroke={1.5} /> : <IconBrandCashapp size={40} className="mb-6" stroke={1.5} />}
                 <span className="text-sm font-bold tracking-widest uppercase text-center">
-                  M-Pesa Statements
+                 Upload M-Pesa Statements
                 </span>
                 {records && <span className="text-xs font-medium mt-3 opacity-60 truncate w-full text-center">{records.name}</span>}
               </label>
@@ -159,10 +159,10 @@ export default function App() {
             {/* Upload CSV */}
             <div className="flex flex-col items-center">
               <input type="file" id="csv" className="hidden" onChange={(e) => setCsvFile(e.target.files?.[0] || null)} />
-              <label htmlFor="csv" className={`w-full aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${csvFile ? 'bg-indigo-50 text-indigo-900' : 'bg-slate-50 hover:bg-slate-100 text-slate-400'}`}>
+              <label htmlFor="csv" className={`w-full border-2 border-dashed aspect-square md:aspect-auto md:h-64 rounded-[3rem] flex flex-col items-center justify-center p-8 cursor-pointer transition-colors ${csvFile ? 'bg-indigo-50 text-indigo-900 border-indigo-200' : 'bg-slate-50 hover:bg-slate-100 text-slate-400 border-slate-200 hover:border-slate-300'}`}>
                 {csvFile ? <IconCheck size={40} className="text-indigo-600 mb-6" stroke={1.5} /> : <IconTable size={40} className="mb-6" stroke={1.5} />}
                 <span className="text-sm font-bold tracking-widest uppercase text-center">
-                  Contribution Sheets
+                  Upload Contribution Sheets
                 </span>
                 {csvFile && <span className="text-xs font-medium mt-3 opacity-60 truncate w-full text-center">{csvFile.name}</span>}
               </label>
